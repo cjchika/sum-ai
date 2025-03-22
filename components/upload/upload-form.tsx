@@ -1,3 +1,4 @@
+"use client";
 import { UploadButton } from "@/utils/uploadthing";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

@@ -3,6 +3,7 @@ import { EmptySummaryState } from "@/components/summaries/empty-summary";
 import SummaryCard, { SummaryType } from "@/components/summaries/summary-card";
 import { Button } from "@/components/ui/button";
 import { getSummaries } from "@/lib/summaries";
+import { hasReachedUploadLimit } from "@/lib/user";
 import { currentUser } from "@clerk/nextjs/server";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
@@ -26,6 +27,9 @@ export default async function DashboardPage() {
     console.error("Error fetching summaries:", error);
   }
 
+  const { hasReachedLimit, uploadLimit: userUploadLimit } =
+    await hasReachedUploadLimit(user?.id);
+
   let uploadLimit = 5;
 
   // const summaries = await getSummaries(userId);
@@ -45,32 +49,39 @@ export default async function DashboardPage() {
                   Transform your PDFs into concise, actionable insights
                 </p>
               </div>
-              <Button
-                className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline"
-                variant={"link"}
-              >
-                <Link className="flex items-center text-white" href={"upload"}>
-                  <Plus className="w-5 h-5 mr-2" /> New Summary
-                </Link>
-              </Button>
+              {!hasReachedLimit && (
+                <Button
+                  className="bg-linear-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 hover:scale-105 transition-all duration-300 group hover:no-underline"
+                  variant={"link"}
+                >
+                  <Link
+                    className="flex items-center text-white"
+                    href={"upload"}
+                  >
+                    <Plus className="w-5 h-5 mr-2" /> New Summary
+                  </Link>
+                </Button>
+              )}
             </div>
 
-            <div className="mb-6">
-              <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 text-rose-800">
-                <p className="text-sm">
-                  You've reached the limit of {uploadLimit} uploads on Basic
-                  Plan{" "}
-                  <Link
-                    className="text-rose-800 underline font-medium underline-offset-4 inline-flex items-center"
-                    href={"/#pricing"}
-                  >
-                    Upgrade to Pro{" "}
-                    <ArrowRight className="w-4 h-4 inline-block" />
-                  </Link>{" "}
-                  for unlimited uploads.
-                </p>
+            {hasReachedLimit && (
+              <div className="mb-6">
+                <div className="bg-rose-50 border border-rose-200 rounded-lg p-4 text-rose-800">
+                  <p className="text-sm">
+                    You've reached the limit of {uploadLimit} uploads on Basic
+                    Plan{" "}
+                    <Link
+                      className="text-rose-800 underline font-medium underline-offset-4 inline-flex items-center"
+                      href={"/#pricing"}
+                    >
+                      Upgrade to Pro{" "}
+                      <ArrowRight className="w-4 h-4 inline-block" />
+                    </Link>{" "}
+                    for unlimited uploads.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {summaries?.length === 0 ? (
               <EmptySummaryState />
