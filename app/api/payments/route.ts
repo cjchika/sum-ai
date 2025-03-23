@@ -7,7 +7,7 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export const POST = async (req: NextResponse) => {
+export const POST = async (req: NextRequest) => {
   const payload = await req.text();
 
   const sig = req.headers.get("stripe-signature");
