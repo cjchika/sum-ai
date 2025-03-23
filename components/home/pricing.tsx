@@ -1,12 +1,32 @@
 import { cn } from "@/lib/utils";
 import { ArrowRight, CheckIcon } from "lucide-react";
 import Link from "next/link";
-import { plans } from "@/utils/constants";
+import { containerVariants, itemVariants, plans } from "@/utils/constants";
+import { MotionDiv, MotionSection } from "../common/motion-wrapper";
+
+const listVariant = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { type: "spring", damping: 20, stiffness: 100 },
+  },
+};
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="relative overflow-hidden ">
-      <div className="py-12 lg:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <MotionSection
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      id="pricing"
+      className="relative overflow-hidden "
+    >
+      <MotionDiv
+        variants={itemVariants}
+        className="py-12 lg:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <div className="flex items-center justify-center w-full">
           <h2 className="uppercase font-bold text-xl mb-8 text-rose-500">
             Pricing
@@ -15,7 +35,9 @@ export default function Pricing() {
 
         <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8">
           {plans.map((plan, idx) => (
-            <div
+            <MotionDiv
+              variants={listVariant}
+              // whiileHover={{scale: 1.02}}
               key={idx}
               className="relative w-full max-w-lg hover:scale-105 hover:transition-all duration-300"
             >
@@ -25,7 +47,10 @@ export default function Pricing() {
                   plan.id === "pro" && "border-rose-500 gap-5 border-2"
                 )}
               >
-                <div className="flex justify-between items-center gap-4">
+                <MotionDiv
+                  variants={listVariant}
+                  className="flex justify-between items-center gap-4"
+                >
                   <div>
                     <p className="text-lg lg:text-xl font-bold capitalize">
                       {plan.name}
@@ -34,7 +59,7 @@ export default function Pricing() {
                       {plan.description}
                     </p>
                   </div>
-                </div>
+                </MotionDiv>
 
                 <div className="flex gap-2">
                   <p className="text-5xl tracking-tight font-extrabold">
@@ -46,14 +71,17 @@ export default function Pricing() {
                   </div>
                 </div>
 
-                <div className="space-y-2.5 leading-relaxed text-base flex-1 ">
+                <MotionDiv
+                  variants={listVariant}
+                  className="space-y-2.5 leading-relaxed text-base flex-1 "
+                >
                   {plan.items?.map((item, idx) => (
                     <li key={idx} className="flex items-center gap-2">
                       <CheckIcon size={18} />
                       <span>{item}</span>
                     </li>
                   ))}
-                </div>
+                </MotionDiv>
 
                 <div className="space-y-2 flex justify-center w-full">
                   <Link
@@ -69,10 +97,10 @@ export default function Pricing() {
                   </Link>
                 </div>
               </div>
-            </div>
+            </MotionDiv>
           ))}
         </div>
-      </div>
-    </section>
+      </MotionDiv>
+    </MotionSection>
   );
 }

@@ -1,9 +1,16 @@
 import { Pizza } from "lucide-react";
 import React from "react";
+import { MotionSection } from "../common/motion-wrapper";
+import { containerVariants } from "@/utils/constants";
 
 export default function Demo() {
   return (
-    <section className="relative">
+    <MotionSection
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="relative"
+    >
       <div className="py-12 lg:py-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           aria-hidden="true"
@@ -37,6 +44,6 @@ export default function Demo() {
           </div>
         </div>
       </div>
-    </section>
+    </MotionSection>
   );
 }

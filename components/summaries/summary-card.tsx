@@ -5,6 +5,8 @@ import Link from "next/link";
 import { FileText } from "lucide-react";
 import { cn, formatFileName } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+import { MotionDiv } from "../common/motion-wrapper";
+import { itemVariants } from "@/utils/constants";
 
 const StatusBadge = ({ status }: { status: string }) => {
   return (
@@ -34,7 +36,15 @@ export interface SummaryType {
 
 const SummaryCard = ({ summary }: { summary: SummaryType }) => {
   return (
-    <div>
+    <MotionDiv
+      variants={itemVariants}
+      initial="hidden"
+      animate="visible"
+      whileHover={{
+        scale: 1.05,
+        transition: { duration: 0.2, ease: "easeOut" },
+      }}
+    >
       <Card className="relative h-full">
         <div className="absolute top-2 right-2">
           <DeleteButton summaryId={summary.id} />
@@ -65,7 +75,7 @@ const SummaryCard = ({ summary }: { summary: SummaryType }) => {
           </div>
         </Link>
       </Card>
-    </div>
+    </MotionDiv>
   );
 };
 
